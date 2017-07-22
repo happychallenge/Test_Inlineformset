@@ -1,0 +1,33 @@
+<h2>Author DETAIL</h2>
+
+<div>
+    <div class="row">
+        <div class="col-sm-4">NAME</div>
+        <div class="col-sm-8">{{ author.name }}</div>
+    </div>
+</div>
+
+<div>
+    <table>
+        <thead>
+            <th>NAME</th>
+            <th>PAGES</th>
+            <th>PRICE</th>
+            <th>CREATED</th>
+        </thead>
+        <tbody>
+    {% for book in author.book_set.all %}
+            <tr>
+                <td>{{book.name}}</td>
+                <td>{{book.pages}}</td>
+                <td>{{book.price}}</td>
+                <td>{{book.created_at}}</td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div>   
+    <a href="{% url 'post:author_update' author.id %}"><button>UPDATE</button></a>
+</div>
