@@ -64,7 +64,7 @@ URL 도 달라지는 것은 없음
         url(r'^add/$', views.author_add, name='author_add'),
     ]
 
-### Views.py
+### Views.py ==> Author, Book New Add 하는 함수
 
     from django.shortcuts import render, redirect
     from django.http import Http404
@@ -92,6 +92,37 @@ URL 도 달라지는 것은 없음
         return render(request, 'post/author_add.html',
                     {'author_form':author_form, 'formset':formset })
 
+### Views.py ==> Author, Book Update 하는 함수
+달라지는 부분은 
+author = Author.objects.prefetch_related('book_set').get(id=id) **추가딤**
+author_form = AuthorForm(request.POST, instance=author) **instance=author 추가**
+author_form = AuthorForm(instance=author)**instance=author 추가**
+formset = BookFormSet(instance=author)**instance=author 추가**
+
+    def author_update(request, id):
+
+        try:
+            author = Author.objects.prefetch_related('book_set').get(id=id)
+        except Author.DoesNotExist:
+            raise Http404
+
+        if request.method == 'POST':
+            author_form = AuthorForm(request.POST, instance=author)
+
+            if author_form.is_valid():
+                created_author = author_form.save(commit=False)
+                formset = BookFormSet(request.POST, instance=created_author)
+
+                if formset.is_valid():
+                    created_author.save()
+                    formset.save()
+                    return redirect(author)
+        else:
+            author_form = AuthorForm(instance=author)
+            formset = BookFormSet(instance=author)
+
+        return render(request, 'post/author_add.html',
+                    {'author_form':author_form, 'formset':formset })
 
                     
 ### post/author_add.html ==> Horizontal Table 형태로 보여줌
