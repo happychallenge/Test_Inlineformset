@@ -48,8 +48,8 @@
             model = Book
             fields = ['author', 'name', 'pages', 'price']
 
-    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)  
-    **가장 중요한 부문**
+    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)  
+
 
 ### urls.py
 URL 도 달라지는 것은 없음
@@ -82,7 +82,7 @@ URL 도 달라지는 것은 없음
                 formset = BookFormSet(request.POST, instance=created_author) 
 
                 if formset.is_valid():
-                    created_author.save()  **Author 정보를 DB 에 저장**
+                    created_author.save()
                     formset.save()         
                     return redirect(created_author)
         else:
@@ -93,8 +93,8 @@ URL 도 달라지는 것은 없음
                     {'author_form':author_form, 'formset':formset })
                     
 ### post/author_add.html ==> Horizontal Table 형태로 보여줌
-   <h2>Author Add</h2>
-
+   
+    <h2>Author Add</h2>
     <form action="" method="POST">
     {% csrf_token %}
     <div>
