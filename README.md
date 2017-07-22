@@ -75,25 +75,27 @@ URL 도 달라지는 것은 없음
 
     def author_add(request):
         if request.method == 'POST':
-            author_form = AuthorForm(request.POST) 
+            author_form = AuthorForm(request.POST)
 
             if author_form.is_valid():
-                created_author = author_form.save(commit=False) 
-                formset = BookFormSet(request.POST, instance=created_author) 
+                created_author = author_form.save(commit=False)
+                formset = BookFormSet(request.POST, instance=created_author)
 
                 if formset.is_valid():
-                    created_author.save()
-                    formset.save()         
-                    return redirect(created_author)
+                    created_author.save()
+                    formset.save()
+                    return redirect(created_author)
         else:
-            author_form = AuthorForm()     
-            formset = BookFormSet()        
+            author_form = AuthorForm()
+            formset = BookFormSet()
 
         return render(request, 'post/author_add.html',
                     {'author_form':author_form, 'formset':formset })
+
+
                     
 ### post/author_add.html ==> Horizontal Table 형태로 보여줌
-   
+
     <h2>Author Add</h2>
     <form action="" method="POST">
     {% csrf_token %}
