@@ -48,7 +48,7 @@
             model = Book
             fields = ['author', 'name', 'pages', 'price']
 
-    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)
+    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)  # **가장 중요한 부문**
 
 ### urls.py
 URL 도 달라지는 것은 없음
@@ -62,3 +62,90 @@ URL 도 달라지는 것은 없음
         url(r'^update/(?P<id>\d+)/$', views.author_update, name='author_update'),
         url(r'^add/$', views.author_add, name='author_add'),
     ]
+
+### Views.py
+
+    from django.shortcuts import render, redirect
+    from django.http import Http404
+
+    # Create your views here.
+    from .models import Author
+    from .forms import AuthorForm, BookForm, BookFormSet
+
+    def author_add(request):
+        if request.method == 'POST':
+            author_form = AuthorForm(request.POST) # Author 정보 form 에 저장
+
+            if author_form.is_valid():
+                created_author = author_form.save(commit=False) # Author 정보를 Commit 전까지 저장
+                formset = BookFormSet(request.POST, instance=created_author) # Book List 정보를 form 에 저장 
+
+                if formset.is_valid():
+                    created_author.save()  # Author 정보를 DB 에 저장
+                    formset.save()         # Book List 를 DB 에 저장
+                    return redirect(created_author)
+        else:
+            author_form = AuthorForm()     # Author  Form
+            formset = BookFormSet()        # Book List Form
+
+        return render(request, 'post/author_add.html',
+                    {'author_form':author_form, 'formset':formset })
+                    
+### post/author_add.html ==> Horizontal Table 형태로 보여줌
+   <h2>Author Add</h2>
+
+    <form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        {{ author_form.as_table }}
+    </div>
+
+    <div>
+        <table id="formset" class="form">
+        {{ formset.management_form }}
+        {% for form in formset.forms %}
+            {% if forloop.first %}
+                <thead>
+                    <tr>
+                        {% for field in form.visible_fields %}
+                        <th>{{ field.label|capfirst }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+            {% endif %}
+                <tr>
+                {% for field in form.visible_fields %}
+                    <td>
+                    {# Include the hidden fields in the form #}
+                    {% if forloop.first %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    {% endif %}
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                    </td>
+                {% endfor %}
+                </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <input type="submit" value='Confirm'>
+    </form>
+    
+### post/author_add_list.html  ==> 아래로 Stack type 으로 
+    <h2>Author Add</h2>
+
+    <form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        {{ author_form.as_table }}
+    </div>
+
+    <div>
+        <table id="formset" class="form">
+            {{ formset.as_table }}
+        </table>
+    </div>
+    <input type="submit" value='Confirm'>
+    </form>    
