@@ -48,7 +48,8 @@
             model = Book
             fields = ['author', 'name', 'pages', 'price']
 
-    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)  # **가장 중요한 부문**
+    BookFormSet = inlineformset_factory(Author, Book, form=BookForm, extra=2)  
+    **가장 중요한 부문**
 
 ### urls.py
 URL 도 달라지는 것은 없음
@@ -74,19 +75,19 @@ URL 도 달라지는 것은 없음
 
     def author_add(request):
         if request.method == 'POST':
-            author_form = AuthorForm(request.POST) # Author 정보 form 에 저장
+            author_form = AuthorForm(request.POST) 
 
             if author_form.is_valid():
-                created_author = author_form.save(commit=False) # Author 정보를 Commit 전까지 저장
-                formset = BookFormSet(request.POST, instance=created_author) # Book List 정보를 form 에 저장 
+                created_author = author_form.save(commit=False) 
+                formset = BookFormSet(request.POST, instance=created_author) 
 
                 if formset.is_valid():
-                    created_author.save()  # Author 정보를 DB 에 저장
-                    formset.save()         # Book List 를 DB 에 저장
+                    created_author.save()  **Author 정보를 DB 에 저장**
+                    formset.save()         
                     return redirect(created_author)
         else:
-            author_form = AuthorForm()     # Author  Form
-            formset = BookFormSet()        # Book List Form
+            author_form = AuthorForm()     
+            formset = BookFormSet()        
 
         return render(request, 'post/author_add.html',
                     {'author_form':author_form, 'formset':formset })
