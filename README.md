@@ -101,7 +101,7 @@ URL 도 달라지는 것은 없음
 소스를 확인해 보면
 
 
-    def author_update(request, id):
+        def author_update(request, id):
 
         try:
             author = Author.objects.prefetch_related('book_set').get(id=id)
