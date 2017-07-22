@@ -94,10 +94,10 @@ URL 도 달라지는 것은 없음
 
 ### Views.py ==> Author, Book Update 하는 함수
 달라지는 부분은 
-author = Author.objects.prefetch_related('book_set').get(id=id) **추가딤**
-author_form = AuthorForm(request.POST, instance=author) **instance=author 추가**
-author_form = AuthorForm(instance=author)**instance=author 추가**
-formset = BookFormSet(instance=author)**instance=author 추가**
+* author = Author.objects.prefetch_related('book_set').get(id=id) **추가**
+* author_form = AuthorForm(request.POST, instance=author) **instance=author 추가**
+* author_form = AuthorForm(instance=author)**instance=author 추가**
+* formset = BookFormSet(instance=author)**instance=author 추가**
 
     def author_update(request, id):
 
