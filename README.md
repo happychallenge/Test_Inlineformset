@@ -99,6 +99,7 @@ URL 도 달라지는 것은 없음
 * author_form = AuthorForm(instance=author)**instance=author 추가**
 * formset = BookFormSet(instance=author)**instance=author 추가**
 
+
     def author_update(request, id):
 
         try:
